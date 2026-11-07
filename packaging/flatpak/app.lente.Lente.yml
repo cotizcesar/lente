@@ -1,0 +1,40 @@
+app-id: app.lente.Lente
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.rust-stable
+command: lente
+finish-args:
+  # Ventana
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --share=ipc
+  - --device=dri
+  # Cámaras (/dev/video*) y acceso USB directo (/dev/bus/usb) para los ajustes Elgato
+  - --device=all
+  # Fotos en la carpeta Imágenes
+  - --filesystem=xdg-pictures
+build-options:
+  append-path: /usr/lib/sdk/rust-stable/bin
+  env:
+    CARGO_HOME: /run/build/lente/cargo
+modules:
+  - name: lente
+    buildsystem: simple
+    build-commands:
+      - cargo --offline fetch --manifest-path Cargo.toml --verbose
+      - cargo --offline build --release --verbose
+      - install -Dm755 target/release/lente /app/bin/lente
+      - install -Dm644 packaging/app.lente.Lente.desktop /app/share/applications/app.lente.Lente.desktop
+      - install -Dm644 packaging/app.lente.Lente.svg /app/share/icons/hicolor/scalable/apps/app.lente.Lente.svg
+      - install -Dm644 packaging/app.lente.Lente.metainfo.xml /app/share/metainfo/app.lente.Lente.metainfo.xml
+    sources:
+      - type: dir
+        path: ../..
+        skip:
+          - target
+          - shots
+          - dist
+      # Generado con flatpak-cargo-generator (ver docs/CONSTRUIR.md o el flujo de GitHub)
+      - cargo-sources.json

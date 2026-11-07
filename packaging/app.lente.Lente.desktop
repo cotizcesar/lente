@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Lente
+GenericName=Control de cámara
+GenericName[en]=Camera control
+Comment=Ajustes de cámaras web (Elgato Facecam y UVC) para Linux
+Comment[en]=Webcam settings (Elgato Facecam and UVC) for Linux
+Exec=lente
+Icon=app.lente.Lente
+Terminal=false
+Categories=AudioVideo;Video;Settings;HardwareSettings;
+Keywords=webcam;camera;facecam;elgato;uvc;v4l2;cámara;
+StartupWMClass=lente

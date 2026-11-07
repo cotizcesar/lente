@@ -1,0 +1,8 @@
+/target
+/shots
+/packaging/flatpak/cargo-sources.json
+/.flatpak-builder
+/build-dir
+*.AppImage
+*.flatpak
+/dist

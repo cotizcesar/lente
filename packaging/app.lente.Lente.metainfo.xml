@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>app.lente.Lente</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>Lente</name>
+  <summary>Ajustes de cámaras web Elgato Facecam y UVC en Linux</summary>
+  <summary xml:lang="en">Settings for Elgato Facecam and UVC webcams on Linux</summary>
+  <description>
+    <p>
+      Lente controla la cámara web en Linux: vista previa con resolución y fotogramas por segundo,
+      encuadre, exposición, enfoque, balance de blancos, imagen, HDR y reducción de ruido.
+      Con las cámaras Elgato Facecam también ofrece los ajustes propios de la cámara (tono,
+      intensidad, bloqueos, modo poca luz, luz de estado, guardar en la cámara) y aplica el perfil
+      que la cámara guardó desde Windows.
+    </p>
+    <p>Proyecto independiente, sin relación con Elgato ni Corsair.</p>
+  </description>
+  <launchable type="desktop-id">app.lente.Lente.desktop</launchable>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.4.0" date="2026-11-06">
+      <description><p>Guardar dentro de la cámara con comprobación; paquetes tarball, .deb, .rpm, AppImage, Flatpak e instalador por terminal.</p></description>
+    </release>
+    <release version="0.3.0" date="2026-11-06">
+      <description><p>14 idiomas, arranque en milisegundos, pantalla completa, cuadrícula, preajustes de enfoque y transiciones suaves.</p></description>
+    </release>
+    <release version="0.2.1" date="2026-11-06">
+      <description><p>Restablecer de fábrica como el original; fps informados por la cámara.</p></description>
+    </release>
+    <release version="0.2.0" date="2026-11-06">
+      <description>
+        <p>Fotogramas por segundo, captura en dos hilos, perfil de Windows, acceso USB directo, paquetes Flatpak y AppImage.</p>
+      </description>
+    </release>
+    <release version="0.1.0" date="2026-11-06"/>
+  </releases>
+</component>
