@@ -40,7 +40,7 @@
     {"name": "LED percent = raw * 100 / 255", "group": "led", "value": 255, "source": "function 0x1802cafe0"},
     {"name": "frame presets", "group": "frame", "value": 4, "source": "function 0x180016f2c (CAMERA_FRAME_PRESET_COUNT)"},
     {"name": "frame preset name max length", "group": "frame", "value": 64, "source": "function 0x18000d797 (CAMERA_FRAME_PRESET_NAME_MAX_LEN)"},
-    {"name": "metering option order", "group": "exposure", "value": "average / center / spot", "source": "function 0x180370770 (names 0 average, 1 center, 2 spot); writer 0x180374b00"},
+    {"name": "metering option order", "group": "exposure", "value": "raw 0 center / 1 spot / 2 average", "source": "functions 0x1802cbcb0 (exposure), 0x1802cbe20 (focus); enums in Elgato.Studio.Common.dll"},
     {"name": "default video mode", "group": "preview", "value": "1080p30 MJPEG", "estimated": true, "note": "no default in EGAVDeviceSupport.dll; GetVideoModeMap 0x1802c9620 is a codec map, not a default"},
     {"name": "AE lock selector", "group": "exposure", "value": 4, "source": "function 0x1802662a0"},
     {"name": "AWB lock selector", "group": "white balance", "value": 15, "source": "function 0x180266e70"},
@@ -98,6 +98,9 @@
     {"name": "LED brightness default", "group": "led", "value": 100, "source": "function 0x1802c8110"},
     {"name": "LED mode default (on while streaming)", "group": "led", "value": 1, "source": "function 0x1802c81f0"},
     {"name": "original XU request attempts", "group": "usb", "value": 1, "source": "functions 0x180331460 (ReadUVC), 0x180331a70 (WriteUVC)"},
-    {"name": "video mode map entries (Facecam 4K)", "group": "preview", "value": 6, "source": "function 0x1802c9620, table 0x180662c70"}
+    {"name": "video mode map entries (Facecam 4K)", "group": "preview", "value": 6, "source": "function 0x1802c9620, table 0x180662c70"},
+    {"name": "metering raw center", "group": "exposure", "value": 0, "source": "function 0x1802cbcb0"},
+    {"name": "metering raw spot", "group": "exposure", "value": 1, "source": "function 0x1802cbcb0"},
+    {"name": "metering raw average", "group": "exposure", "value": 2, "source": "function 0x1802cbcb0"}
   ]
 }

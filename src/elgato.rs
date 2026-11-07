@@ -92,13 +92,24 @@ pub struct XuDef {
 }
 
 /// Writable extension-unit controls from the descriptor table at 0x180662550.
+/// Metering menus are in the camera's raw order. Facecam 4K / MK.2: SetExposureMetering
+/// (0x1802cbcb0) maps CAMERA_EXPOSURE_METERING center-weighted 0 → raw 0, average 1 → raw 2,
+/// spot 2 → raw 1; SetFocusMetering (0x1802cbe20) writes CAMERA_FOCUS_METERING as-is
+/// (center 0, spot 1, average 2; enum values from Elgato.Studio.Common.dll). So raw 0 = center,
+/// 1 = spot, 2 = average for both.
+pub const METERING_RAW_CENTER: i32 = 0;
+#[allow(dead_code)]
+pub const METERING_RAW_SPOT: i32 = 1;
+#[allow(dead_code)]
+pub const METERING_RAW_AVERAGE: i32 = 2;
+
 pub const XU_CONTROLS: &[XuDef] = &[
     XuDef { key: "xu_tint", label: "Tono (verde ↔ magenta)", group: Group::WhiteBalance, unit: XU1, selector: 18, size: 2, signed: true, min: -300, max: 300, step: 1, default: 0, menu: &[] },
     XuDef { key: "xu_vibrancy", label: "Intensidad de color", group: Group::Picture, unit: XU1, selector: 14, size: 2, signed: false, min: 0, max: 100, step: 1, default: 0, menu: &[] },
     XuDef { key: "xu_hdr", label: "HDR", group: Group::Picture, unit: XU1, selector: 21, size: 1, signed: false, min: 0, max: 1, step: 1, default: 0, menu: &["Apagado", "Encendido"] },
-    XuDef { key: "xu_ae_metering", label: "Medición de exposición", group: Group::Exposure, unit: XU1, selector: 2, size: 1, signed: false, min: 0, max: 2, step: 1, default: 0, menu: &["Promedio", "Centro ponderado", "Puntual"] },
+    XuDef { key: "xu_ae_metering", label: "Medición de exposición", group: Group::Exposure, unit: XU1, selector: 2, size: 1, signed: false, min: 0, max: 2, step: 1, default: METERING_RAW_CENTER, menu: &["Centro ponderado", "Puntual", "Promedio"] },
     XuDef { key: "xu_binning", label: "Modo poca luz", group: Group::Exposure, unit: XU2, selector: 29, size: 2, signed: false, min: 0, max: 63, step: 1, default: 0, menu: &[] },
-    XuDef { key: "xu_af_metering", label: "Medición de enfoque", group: Group::Focus, unit: XU1, selector: 25, size: 1, signed: false, min: 0, max: 2, step: 1, default: 0, menu: &["Promedio", "Centro", "Puntual"] },
+    XuDef { key: "xu_af_metering", label: "Medición de enfoque", group: Group::Focus, unit: XU1, selector: 25, size: 1, signed: false, min: 0, max: 2, step: 1, default: METERING_RAW_CENTER, menu: &["Centro", "Puntual", "Promedio"] },
     XuDef { key: "xu_flip", label: "Voltear / espejo", group: Group::Frame, unit: XU1, selector: 20, size: 1, signed: false, min: 0, max: 3, step: 1, default: 0, menu: &["Normal", "Espejo", "Volteado", "Espejo + volteado"] },
     XuDef { key: "xu_nr", label: "Reducción de ruido", group: Group::Detail, unit: XU1, selector: 22, size: 1, signed: false, min: 0, max: 3, step: 3, default: 2, menu: &[] },
     XuDef { key: "xu_nr2d", label: "Reducción de ruido 2D", group: Group::Detail, unit: XU2, selector: 3, size: 1, signed: false, min: 0, max: 100, step: 1, default: 0, menu: &[] },
@@ -509,6 +520,18 @@ mod tests {
         assert!((zoom_at(1.0, 4.0, 10, 0) - 1.0).abs() < 1e-9);
         // 1/zoom moves in a straight line: halfway between 1× and 4× is 1.6×.
         assert!((zoom_at(1.0, 4.0, 2, 1) - 1.6).abs() < 1e-9);
+    }
+
+    #[test]
+    fn metering_order() {
+        let ae = XU_CONTROLS.iter().find(|d| d.key == "xu_ae_metering").unwrap();
+        let af = XU_CONTROLS.iter().find(|d| d.key == "xu_af_metering").unwrap();
+        assert_eq!(ae.menu[METERING_RAW_CENTER as usize], "Centro ponderado");
+        assert_eq!(ae.menu[METERING_RAW_SPOT as usize], "Puntual");
+        assert_eq!(ae.menu[METERING_RAW_AVERAGE as usize], "Promedio");
+        assert_eq!(af.menu[METERING_RAW_CENTER as usize], "Centro");
+        assert_eq!(af.menu[METERING_RAW_SPOT as usize], "Puntual");
+        assert_eq!(af.menu[METERING_RAW_AVERAGE as usize], "Promedio");
     }
 
     #[test]

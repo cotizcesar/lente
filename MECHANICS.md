@@ -53,9 +53,8 @@ Record layout: id, name, unit, selector, size, signed, min, max, step, default, 
 | WB Temperature Value (read) | 1 | 0x11 | 4 | – | – | – | – | 0x1806629b0 |
 
 Menus:
-* Exposure metering: 0 average, 1 center, 2 spot (confirmed in section 10).
-* Focus metering: 0 average, 1 center, 2 spot (`CAMERA_FOCUS_METERING_*`; the order is
-  **estimated** for the newer models).
+* Exposure metering (raw XU value): 0 center-weighted, 1 spot, 2 average (section 10).
+* Focus metering (raw XU value): 0 center, 1 spot, 2 average (section 10).
 * Anti-flicker: Off / 50 Hz / 60 Hz / Auto (`CAMERA_ANTI_FLICKER_*`). On Linux the camera's
   standard "Power Line Frequency" control is used.
 
@@ -330,12 +329,23 @@ doesn't start at 100, Lente maps its range onto 1×–4× (like the Facecam's 10
 
 ## 10. Exposure and focus metering
 
-- Facecam Pro/4K: `CFacecamProSupport::SetExposureMeteringMode` (0x180374b00) writes the value
-  as-is (0, 1 or 2) to XU1; the names (0x180370770) are 0 **average**, 1 **center**, 2 **spot** —
-  the same order as Lente's menu.
-- Focus: `SetExtendedAFMetering` (0x180266cc0) writes 1 byte to XU1 selector 25.
+- Enum values (Constant table of `Elgato.Studio.Common.dll`): `CAMERA_EXPOSURE_METERING` MANUAL −2,
+  INVALID −1, CENTER_WEIGHTED_AVERAGE **0**, AVERAGE **1**, SPOT **2**; `CAMERA_FOCUS_METERING`
+  INVALID −1, CENTER **0**, SPOT **1**, AVERAGE **2**.
+- Facecam 4K / MK.2 (`CameraDeviceElgatoWebcam`):
+  - `Camera_SetExposureMetering` → vtable +0x38 → **0x1802cbcb0**: maps the enum to the raw XU
+    value (center-weighted 0 → **0**, average 1 → **2**, spot 2 → **1**; anything else → error −4)
+    and writes property 0x34 (XU1 selector 2).
+  - `Camera_SetFocusMetering` → +0x48 → **0x1802cbe20**: refuses values of 3 or more and writes
+    the enum value as-is to property 0x3c (XU1 selector 25, `SetExtendedAFMetering`
+    0x180266cc0).
+  - So for both, raw **0 = center, 1 = spot, 2 = average**. Lente's menus follow that raw order
+    (test `metering_order`). Earlier Lente versions showed 0 = average, which was wrong.
+- The older Facecam Pro (`CFacecamProSupport`, 0x180374b00) writes 0–2 to a different XU
+  selector and logs them as average / center / spot (0x180370770); that naming belongs to that
+  model only.
 - Control table: AE metering (0x1806625b0) and AF metering (0x1806626f8) run from 0 to 2 with
-  default 0, as in Lente.
+  default 0 (= center).
 
 ## 11. Focus presets
 
