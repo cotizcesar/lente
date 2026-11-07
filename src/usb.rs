@@ -76,11 +76,12 @@ impl DirectUsb {
                 return Ok(());
             }
             let e = io::Error::last_os_error();
-            // A camera waking from USB power saving stalls requests for ~0.5 s (EPIPE). Only
-            // writes (a person pressed something) retry; probes fail fast so opening stays quick.
-            if e.raw_os_error() == Some(libc::EPIPE) && query & 0x80 == 0 && tries < 2 {
+            // The original sends each request once (EGAVUVC::ReadUVC 0x180331460 / WriteUVC
+            // 0x180331a70). On Linux a camera waking from USB power saving stalls requests for
+            // ~0.5 s (EPIPE), so writes alone retry; reads fail fast so opening stays quick.
+            if e.raw_os_error() == Some(libc::EPIPE) && query & 0x80 == 0 && tries < WRITE_RETRIES {
                 tries += 1;
-                std::thread::sleep(std::time::Duration::from_millis(250));
+                std::thread::sleep(std::time::Duration::from_millis(WRITE_RETRY_MS));
                 continue;
             }
             return Err(e);
@@ -100,6 +101,10 @@ ACTION==\"add\", SUBSYSTEM==\"usb\", ATTR{idVendor}==\"0fd9\", TEST==\"power/con
 
 /// Writes wait as long as the kernel's UVC driver does: saving to the camera's memory is slow.
 pub const WRITE_TIMEOUT_MS: u32 = 5000;
+/// Linux-only retries of a write the camera stalls (EPIPE) while waking up; the original
+/// makes a single attempt.
+pub const WRITE_RETRIES: u32 = 2;
+pub const WRITE_RETRY_MS: u64 = 250;
 
 pub const RULE_PATH: &str = "/etc/udev/rules.d/70-lente-elgato.rules";
 

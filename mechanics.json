@@ -41,7 +41,7 @@
     {"name": "frame presets", "group": "frame", "value": 4, "source": "function 0x180016f2c (CAMERA_FRAME_PRESET_COUNT)"},
     {"name": "frame preset name max length", "group": "frame", "value": 64, "source": "function 0x18000d797 (CAMERA_FRAME_PRESET_NAME_MAX_LEN)"},
     {"name": "metering option order", "group": "exposure", "value": "average / center / spot", "source": "function 0x180370770 (names 0 average, 1 center, 2 spot); writer 0x180374b00"},
-    {"name": "default video mode", "group": "preview", "value": "1080p30 MJPEG", "estimated": true},
+    {"name": "default video mode", "group": "preview", "value": "1080p30 MJPEG", "estimated": true, "note": "no default in EGAVDeviceSupport.dll; GetVideoModeMap 0x1802c9620 is a codec map, not a default"},
     {"name": "AE lock selector", "group": "exposure", "value": 4, "source": "function 0x1802662a0"},
     {"name": "AWB lock selector", "group": "white balance", "value": 15, "source": "function 0x180266e70"},
     {"name": "AF lock selector", "group": "focus", "value": 26, "source": "function 0x180266960"},
@@ -66,7 +66,7 @@
     {"name": "LED index while streaming", "group": "led", "value": 3, "source": "function 0x1802cafe0"},
     {"name": "LED index idle", "group": "led", "value": 2, "source": "function 0x1802cafe0"},
     {"name": "LED write path", "group": "led", "value": "10 bytes [255, 0, index, 0, 0, raw, 0, 0, 0, 0] to XU2 selector 4, index 3 then 2", "source": "functions 0x1802c6a40, 0x1802cd760"},
-    {"name": "USB write retry delay", "group": "usb", "value": 250, "unit": "ms", "estimated": true},
+    {"name": "USB write retry delay", "group": "usb", "value": 250, "unit": "ms", "estimated": true, "note": "Linux-only: the original makes a single attempt (0x180331460 / 0x180331a70)"},
     {"name": "transition distance factor", "group": "frame", "value": 0.5, "source": "function 0x1802a0000 (constant 0x180646d40)"},
     {"name": "transition speed", "group": "frame", "value": 1.0, "source": "function 0x1802a2e60 (CameraFramePresetController constructor, +0x44 = 1)"},
     {"name": "transition step", "group": "frame", "value": 30, "unit": "ms", "source": "function 0x1802a2e60 (+0x40 = 0x1e); used as divisor in 0x1802a3c00"},
@@ -96,6 +96,8 @@
     {"name": "LED write tag byte", "group": "led", "value": 255, "source": "function 0x1802c6a40 (0x300ff)"},
     {"name": "LED write index byte", "group": "led", "value": 2, "source": "function 0x1802c6a40"},
     {"name": "LED brightness default", "group": "led", "value": 100, "source": "function 0x1802c8110"},
-    {"name": "LED mode default (on while streaming)", "group": "led", "value": 1, "source": "function 0x1802c81f0"}
+    {"name": "LED mode default (on while streaming)", "group": "led", "value": 1, "source": "function 0x1802c81f0"},
+    {"name": "original XU request attempts", "group": "usb", "value": 1, "source": "functions 0x180331460 (ReadUVC), 0x180331a70 (WriteUVC)"},
+    {"name": "video mode map entries (Facecam 4K)", "group": "preview", "value": 6, "source": "function 0x1802c9620, table 0x180662c70"}
   ]
 }

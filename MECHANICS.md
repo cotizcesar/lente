@@ -362,3 +362,31 @@ doesn't start at 100, Lente maps its range onto 1×–4× (like the Facecam's 10
   Mode 0: raw 0 in both slots; mode 1: raw while streaming and 0 idle; mode 2: raw in both.
 - Lente sends exactly those 10 bytes (test `led_payload`) and then reads the light back as before
   to show what the camera applied. Brightness can be 0 %, as in the original.
+
+## 13. Extension-unit transport (EGAVUVC)
+
+- `EGAVUVC::ReadUVC` (0x180331460) and `EGAVUVC::WriteUVC` (0x180331a70) look up the unit's
+  KS node and send one `KsProperty` request (flags 0x10000001 = GET | TOPOLOGY, 0x10000002 =
+  SET | TOPOLOGY) through 0x180332d80. They make **a single attempt**: no retry and no delay. A
+  failure is logged as `_XU_SetGetExtensionUnit() FAILED with hr = …`; HRESULT 0x80070490
+  (element not found) becomes error −15. Only units 6 and 7 are accepted
+  (`(unit + 0xfefa0000) & 0xfefeffff == 0`, unit 0x1070000 excluded).
+- Lente reads the same way: one attempt (driver, then direct USB). Writes over direct USB are
+  retried twice, 250 ms apart, only when the camera answers EPIPE: on Linux, a Facecam waking
+  from USB power saving rejects requests for about half a second, a case Windows' driver
+  handles. That retry is Linux-specific (**estimated**), not from the original.
+
+## 14. Video mode map (codec sets per model)
+
+- `GetVideoModeMap` (0x1802c9620) picks a table by USB product id (0x1802c9940): Facecam 4K
+  (0x91, 0x92) → table 0x180662c70; Facecam MK.2 (0x93, 0x94, 0xd6, 0xd7) → table 0x180662ee0;
+  other models have none ("Unknown device … no video mode map").
+- Each table has 6 entries (index 0–5) pointing to two 40-byte lists of codec flags per
+  resolution/frame-rate slot (0x0e or 0x0c = several codecs, 0x08 = one codec); they feed the
+  XU2 VIDEOMODES control (selector 2, 65 bytes, `SetVideoModeCodecs` 0x18025ff50), which changes
+  which formats the camera advertises over USB.
+- This is a camera configuration, not the app's default preview mode. Lente doesn't write it
+  (a wrong value would change what the camera offers to every app); it lists the formats the
+  camera advertises. The default preview mode (1080p30 MJPEG) stays **estimated**: no default
+  was found in the native library.
+
