@@ -1,9 +1,9 @@
-# Lente: acceso directo por USB a cámaras Elgato (vendor 0fd9) para el usuario de la sesión
+# Lente: direct USB access to Elgato cameras (vendor 0fd9) for the logged-in user
 SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="0fd9", TAG+="uaccess"
-# Sin ahorro de energía USB: tras despertar, la cámara rechaza órdenes durante medio segundo
+# No USB power saving: after waking, the camera rejects commands for half a second
 ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0fd9", TEST=="power/control", ATTR{power/control}="on"
 #
-# Instalar:
+# Install:
 #   sudo cp 70-lente-elgato.rules /etc/udev/rules.d/
 #   sudo udevadm control --reload && sudo udevadm trigger
-# Luego desconecta y vuelve a conectar la cámara.
+# Then unplug the camera and plug it back in.

@@ -1,7 +1,7 @@
 #!/bin/sh
-# Construye dist/Lente-<versión>-x86_64.AppImage con linuxdeploy (lo descarga; necesita internet).
-# Usar: chmod +x Lente-*.AppImage y doble clic.
-# Uso (desde la carpeta del proyecto): sh packaging/appimage/build-appimage.sh
+# Builds dist/Lente-<version>-x86_64.AppImage with linuxdeploy (downloads it; needs internet).
+# Use: chmod +x Lente-*.AppImage and double-click.
+# Usage (from the project folder): sh packaging/appimage/build-appimage.sh
 set -eu
 cd "$(dirname "$0")/../.."
 VERSION=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
@@ -24,4 +24,4 @@ export OUTPUT="$WORK/$OUT"
     --icon-file packaging/app.lente.Lente.svg \
     --output appimage
 mv "$WORK/$OUT" "dist/$OUT"
-echo "Listo: dist/$OUT"
+echo "Done: dist/$OUT"

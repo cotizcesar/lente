@@ -1,19 +1,19 @@
 app-id: app.lente.Lente
 runtime: org.freedesktop.Platform
-runtime-version: '24.08'
+runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
 command: lente
 finish-args:
-  # Ventana
+  # Window
   - --socket=wayland
   - --socket=fallback-x11
   - --share=ipc
   - --device=dri
-  # Cámaras (/dev/video*) y acceso USB directo (/dev/bus/usb) para los ajustes Elgato
+  # Cameras (/dev/video*) and direct USB access (/dev/bus/usb) for the Elgato settings
   - --device=all
-  # Fotos en la carpeta Imágenes
+  # Photos in the Pictures folder
   - --filesystem=xdg-pictures
 build-options:
   append-path: /usr/lib/sdk/rust-stable/bin
@@ -36,5 +36,5 @@ modules:
           - target
           - shots
           - dist
-      # Generado con flatpak-cargo-generator (ver docs/CONSTRUIR.md o el flujo de GitHub)
+      # Generated with flatpak-cargo-generator (see docs/BUILDING.md or the GitHub workflow)
       - cargo-sources.json

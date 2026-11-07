@@ -91,9 +91,9 @@ impl DirectUsb {
 /// udev rule giving the local user access to Elgato cameras' USB nodes and turning USB power
 /// saving off (the camera rejects requests for ~0.5 s after waking).
 pub fn udev_rule() -> String {
-    "# Lente: acceso directo por USB a cámaras Elgato (vendor 0fd9) para el usuario de la sesión\n\
+    "# Lente: direct USB access to Elgato cameras (vendor 0fd9) for the logged-in user\n\
 SUBSYSTEM==\"usb\", ENV{DEVTYPE}==\"usb_device\", ATTR{idVendor}==\"0fd9\", TAG+=\"uaccess\"\n\
-# Sin ahorro de energía USB: tras despertar, la cámara rechaza órdenes durante medio segundo\n\
+# No USB power saving: after waking, the camera rejects commands for half a second\n\
 ACTION==\"add\", SUBSYSTEM==\"usb\", ATTR{idVendor}==\"0fd9\", TEST==\"power/control\", ATTR{power/control}=\"on\"\n"
         .to_string()
 }

@@ -1,8 +1,8 @@
 #!/bin/sh
-# Construye dist/lente_<versión>_amd64.deb (Debian, Ubuntu, Linux Mint, Pop!_OS…).
-# Instalar: sudo apt install ./lente_<versión>_amd64.deb
-# Usa dpkg-deb si está; si no, arma el mismo formato con tar y xz.
-# Uso (desde la carpeta del proyecto): sh packaging/deb/build-deb.sh
+# Builds dist/lente_<version>_amd64.deb (Debian, Ubuntu, Linux Mint, Pop!_OS…).
+# Install: sudo apt install ./lente_<version>_amd64.deb
+# Uses dpkg-deb when available; otherwise writes the same format with tar and xz.
+# Usage (from the project folder): sh packaging/deb/build-deb.sh
 set -eu
 cd "$(dirname "$0")/../.."
 VERSION=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
@@ -26,11 +26,11 @@ Depends: libc6 (>= 2.35), libgcc-s1, libegl1, libxkbcommon0
 Recommends: libwayland-client0, libwayland-egl1, libx11-6, libxcursor1, libxi6, libxrandr2
 Section: video
 Priority: optional
-Description: Control de cámaras web (Elgato Facecam y UVC) para Linux
- Vista previa con resolución y fotogramas por segundo, encuadre, exposición,
- enfoque, balance de blancos, imagen, HDR, reducción de ruido, modo poca luz,
- luz de estado y guardar los ajustes dentro de la cámara Elgato.
- Incluye la regla de udev para el acceso USB a las cámaras Elgato.
+Description: Webcam control (Elgato Facecam and UVC) for Linux
+ Live preview with resolution and frame rate, framing, exposure, focus,
+ white balance, picture, HDR, noise reduction, low-light mode, status light
+ and saving settings inside the Elgato camera.
+ Includes the udev rule for USB access to Elgato cameras.
 EOF
 
 for s in postinst postrm; do
@@ -57,7 +57,7 @@ else
     printf '2.0\n' > "$P/debian-binary"
     tar --owner=0 --group=0 --numeric-owner --sort=name -C "$ROOT/DEBIAN" -czf "$P/control.tar.gz" .
     tar --owner=0 --group=0 --numeric-owner --sort=name -C "$ROOT" --exclude=./DEBIAN -cJf "$P/data.tar.xz" .
-    # Archivo ar clásico, como lo escribe dpkg-deb (nombres sin la barra final de GNU ar).
+    # Classic ar archive, as dpkg-deb writes it (names without GNU ar's trailing slash).
     {
         printf '!<arch>\n'
         for m in debian-binary control.tar.gz data.tar.xz; do
@@ -68,4 +68,4 @@ else
         done
     } > "$OUT"
 fi
-echo "Listo: $OUT"
+echo "Done: $OUT"

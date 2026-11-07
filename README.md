@@ -1,122 +1,120 @@
 # Lente
 
-**Control de cámaras web para Linux, pensado para la Elgato Facecam** (Facecam, Facecam Pro,
-Facecam Neo, Facecam MK.2, Facecam 4K) **y cualquier cámara UVC.**
+**Webcam control for Linux, made for the Elgato Facecam** (Facecam, Facecam Pro, Facecam Neo,
+Facecam MK.2, Facecam 4K) **and any UVC camera.**
 
-El programa oficial de Elgato sólo existe para Windows y macOS. Lente da en Linux los mismos
-ajustes de cámara: vista previa con resolución y fotogramas por segundo, encuadre, exposición,
-enfoque, balance de blancos, imagen, HDR, reducción de ruido, modo poca luz, luz de estado,
-guardar ajustes dentro de la cámara y aplicar el perfil que la cámara guardó desde Windows.
+Elgato's official app only exists for Windows and macOS. Lente brings the same camera settings to
+Linux: live preview with resolution and frame rate, framing, exposure, focus, white balance,
+picture, HDR, noise reduction, low-light mode, status light, saving settings inside the camera and
+applying the profile the camera stored from Windows.
 
-> Proyecto independiente. No está afiliado a Elgato ni a Corsair. «Elgato» y «Facecam» son
-> marcas de Corsair. Lente no contiene código, imágenes ni archivos de Elgato.
+> Independent project, not affiliated with Elgato or Corsair. "Elgato" and "Facecam" are
+> trademarks of Corsair. Lente contains no Elgato code, images or files.
 
-## Instalar
+## Install
 
-### Desde la terminal (cualquier distribución)
+### From the terminal (any distribution)
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/cotizcesar/lente/main/install.sh | sh
 ```
 
-Instala la última versión en `/usr/local` con su entrada de menú y el permiso USB (pide la
-contraseña). Variantes: `… | sh -s -- --user` (sólo tu usuario, en `~/.local`, sin contraseña),
+Installs the latest release into `/usr/local` with its menu entry and the USB permission (asks for
+your password). Variants: `… | sh -s -- --user` (just your user, in `~/.local`, no password),
 `… | sh -s -- --version 0.4.0`, `… | sh -s -- --uninstall`.
 
-### Paquetes
+### Packages
 
-En la página de [versiones](https://github.com/cotizcesar/lente/releases) (todos para x86_64):
+On the [releases](https://github.com/cotizcesar/lente/releases) page (all x86_64):
 
-| Sistema | Archivo | Cómo |
+| System | File | How |
 |---|---|---|
 | Debian, Ubuntu, Mint, Pop!_OS | `lente_0.4.0_amd64.deb` | `sudo apt install ./lente_0.4.0_amd64.deb` |
 | Fedora, RHEL, Alma, Rocky | `lente-0.4.0-1.x86_64.rpm` | `sudo dnf install ./lente-0.4.0-1.x86_64.rpm` |
 | openSUSE | `lente-0.4.0-1.x86_64.rpm` | `sudo zypper install ./lente-0.4.0-1.x86_64.rpm` |
-| Cualquiera (Flatpak) | `Lente-0.4.0.flatpak` | `flatpak install --user Lente-0.4.0.flatpak` y `flatpak run app.lente.Lente` |
-| Cualquiera (AppImage) | `Lente-0.4.0-x86_64.AppImage` | `chmod +x Lente-*.AppImage` y doble clic |
-| Cualquiera (tarball) | `lente-linux-x86_64.tar.gz` | descomprimir y `./lente`, o `sh install.sh` para instalarlo |
+| Any (Flatpak) | `Lente-0.4.0.flatpak` | `flatpak install --user Lente-0.4.0.flatpak`, then `flatpak run app.lente.Lente` |
+| Any (AppImage) | `Lente-0.4.0-x86_64.AppImage` | `chmod +x Lente-*.AppImage` and double-click |
+| Any (tarball) | `lente-linux-x86_64.tar.gz` | extract and run `./lente`, or `sh install.sh` to install it |
 
-`SHA256SUMS` lleva las sumas de comprobación (`sha256sum -c SHA256SUMS --ignore-missing`).
-Los paquetes `.deb`, `.rpm`, el tarball y el instalador traen la regla USB; con AppImage y
-Flatpak instálala una vez como se explica en [Permiso USB](#permiso-usb-una-vez).
-Funcionan en distribuciones de 2022 en adelante (glibc 2.35). En Arch/CachyOS usa el instalador
-por terminal o el AppImage.
+`SHA256SUMS` holds the checksums (`sha256sum -c SHA256SUMS --ignore-missing`).
+The `.deb` and `.rpm` packages, the tarball and the installer include the USB rule; with the
+AppImage or Flatpak, install it once as explained in [USB permission](#usb-permission-once).
+They run on distributions from 2022 onwards (glibc 2.35). On Arch/CachyOS use the terminal
+installer or the AppImage.
 
-### Desde el código
+### From source
 
 ```sh
 git clone https://github.com/cotizcesar/lente lente && cd lente && sh install.sh
 ```
 
-Compila con Rust y lo instala igual. Más en [docs/CONSTRUIR.md](docs/CONSTRUIR.md).
+Builds with Rust and installs the same way. More in [docs/BUILDING.md](docs/BUILDING.md).
 
-## Idiomas
+## Languages
 
-Danés, alemán, inglés, español, francés, italiano, japonés, coreano, neerlandés, portugués
-(Brasil y Portugal), ruso, sueco y chino tradicional — los mismos que la app oficial. Lente usa el
-idioma del sistema; se cambia en **Dispositivo → Idioma** o con `LENTE_LANG=de lente`.
-Las traducciones están en `i18n/strings.tsv` (una fila por texto, una columna por idioma).
+Danish, German, English, Spanish, French, Italian, Japanese, Korean, Dutch, Portuguese (Brazil and
+Portugal), Russian, Swedish and Traditional Chinese — the same as the official app. Lente follows
+the system language; change it in **Device → Language** or with `LENTE_LANG=de lente`.
+Translations live in `i18n/strings.tsv` (one row per text, one column per language).
 
-## Funciones
+## Features
 
-| Grupo | Ajustes |
+| Group | Settings |
 |---|---|
-| Captura | vista previa, resolución, 30/60 fps, MJPEG/YUY2/NV12, «fotogramas fijos», foto, pantalla completa, cuadrícula |
-| Encuadre | zoom, pan, tilt, 4 encuadres guardados con transición suave, voltear/espejo |
-| Exposición | automática/manual, compensación, obturación, ganancia/ISO, medición, bloqueo, antiparpadeo, modo poca luz, «ajustar una vez» |
-| Enfoque | automático, distancia, medición, bloqueo, «reenfocar ahora», 3 preajustes de enfoque |
-| Balance de blancos | automático, temperatura, tono, bloqueo, «ajustar una vez» |
-| Imagen | brillo, contraste, saturación, intensidad, rango dinámico (Estándar / Amplio / HDR) |
-| Detalle | nitidez, reducción de ruido, 2D, 3D |
-| Dispositivo | luz de estado, guardar en la cámara, perfil de Windows, restablecer, reiniciar |
+| Capture | preview, resolution, 30/60 fps, MJPEG/YUY2/NV12, "fixed frame rate", photo, full screen, grid |
+| Framing | zoom, pan, tilt, 4 saved frames with smooth transitions, flip/mirror |
+| Exposure | auto/manual, compensation, shutter, gain/ISO, metering, lock, anti-flicker, low-light mode, "adjust once" |
+| Focus | auto, distance, metering, lock, "refocus now", 3 focus presets |
+| White balance | auto, temperature, tint, lock, "adjust once" |
+| Picture | brightness, contrast, saturation, vibrancy, dynamic range (Standard / Wide / HDR) |
+| Detail | sharpness, noise reduction, 2D, 3D |
+| Device | status light, save to camera, Windows profile, factory reset, restart |
 
-La pestaña **Dispositivo → Qué funciona en Linux** muestra, para tu cámara, cada función y cómo
-la hace Lente. La lista completa está en [docs/COMPATIBILIDAD.md](docs/COMPATIBILIDAD.md).
+The **Device → What works on Linux** tab shows, for your camera, every feature and how Lente
+handles it. The full list is in [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md).
 
-## Permiso USB (una vez)
+## USB permission (once)
 
-Linux sólo deja usar los ajustes Elgato que la cámara anuncia. Para el resto (tono, intensidad,
-bloqueos, reenfocar, reiniciar…) Lente habla con la cámara directamente por USB, igual que el
-programa de Elgato. Eso necesita una regla de udev. Lente la instala desde
-**Dispositivo → Dar permiso**, o a mano:
+Linux only passes through the Elgato settings the camera advertises. For the rest (tint, vibrancy,
+locks, refocus, restart…) Lente talks to the camera directly over USB, as Elgato's app does. That
+needs a udev rule. Lente installs it from **Device → Grant permission**, or by hand:
 
 ```sh
 sudo cp 70-lente-elgato.rules /etc/udev/rules.d/
 sudo udevadm control --reload && sudo udevadm trigger
 ```
 
-Desconecta y vuelve a conectar la cámara. La regla también desactiva el ahorro de energía USB,
-que hace que la Facecam se desconecte o rechace órdenes.
+Unplug the camera and plug it back in. The rule also turns off USB power saving, which makes the
+Facecam disconnect or reject commands.
 
-Tu usuario debe estar en el grupo `video` para usar `/dev/video*`.
+Your user must be in the `video` group to use `/dev/video*`.
 
-## Si no llega a 30 o 60 fps
+## If it doesn't reach 30 or 60 fps
 
-Lente muestra los fps reales de la cámara y los de la vista previa. Con poca luz la cámara
-alarga la exposición y baja los fps: activa **Fotogramas fijos** en «Formato de vídeo» o ilumina
-más. El HDR sólo funciona hasta 30 fps; Lente baja a 30 al activarlo.
+Lente shows the frame rate the camera reports and the preview's. In low light the camera lengthens
+the exposure and drops frames: turn on **Fixed frame rate** under "Video format", or add light.
+HDR only works up to 30 fps; Lente switches to 30 when you turn it on.
 
-## Compilar
+## Building
 
-Ver [docs/CONSTRUIR.md](docs/CONSTRUIR.md). Rápido:
+See [docs/BUILDING.md](docs/BUILDING.md). Quick start:
 
 ```sh
 cargo build --release
 ./target/release/lente
 ```
 
-## Cómo funciona
+## How it works
 
-* Ajustes estándar: V4L2 (`VIDIOC_*_CTRL`).
-* Ajustes Elgato: unidades de extensión UVC 6 y 7 (`UVCIOC_CTRL_QUERY`) y, si Linux no los
-  deja pasar, petición UVC directa por `usbfs`.
-* Los números (selectores, rangos, reglas como «HDR hasta 30 fps» o el modo poca luz 0/60/62)
-  salen del análisis de interoperabilidad descrito en [MECHANICS.md](MECHANICS.md).
+* Standard settings: V4L2 (`VIDIOC_*_CTRL`).
+* Elgato settings: UVC extension units 6 and 7 (`UVCIOC_CTRL_QUERY`) and, when Linux doesn't pass
+  them through, direct UVC requests over `usbfs`.
+* The numbers (selectors, ranges, rules such as "HDR up to 30 fps" or low-light mode 0/60/62) come
+  from the interoperability analysis described in [MECHANICS.md](MECHANICS.md).
 
-Gracias a los proyectos abiertos
-[facecam-tui](https://github.com/hamen/facecam-tui) (técnica USB directa) y
-[ElgatoCam](https://github.com/PrivateGER/ElgatoCam) (notas de la Facecam 4K).
+Thanks to the open projects [facecam-tui](https://github.com/hamen/facecam-tui) (direct USB
+technique) and [ElgatoCam](https://github.com/PrivateGER/ElgatoCam) (Facecam 4K notes).
 
-## Licencia
+## License
 
-GPL-3.0-or-later. Ver [LICENSE](LICENSE).
+GPL-3.0-or-later. See [LICENSE](LICENSE).

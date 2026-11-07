@@ -1,7 +1,7 @@
-name: Publicar versión
+name: Release
 
-# Al subir una etiqueta vX.Y.Z se construyen todos los paquetes y se adjuntan a la versión
-# de GitHub: tarball, .deb, .rpm, AppImage, Flatpak, install.sh y SHA256SUMS.
+# Pushing a vX.Y.Z tag builds every package and attaches them to the GitHub release:
+# tarball, .deb, .rpm, AppImage, Flatpak, install.sh and SHA256SUMS.
 on:
   push:
     tags: ['v*']
@@ -11,51 +11,51 @@ permissions:
   contents: write
 
 jobs:
-  paquetes:
+  packages:
     runs-on: ubuntu-24.04
-    # Ubuntu 22.04 (glibc 2.35): el programa funciona en distribuciones de 2022 en adelante.
+    # Ubuntu 22.04 (glibc 2.35): the program runs on distributions from 2022 onwards.
     container:
       image: ubuntu:22.04
       options: --privileged
     steps:
-      - name: Herramientas
+      - name: Tools
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
             ca-certificates curl git build-essential pkg-config file xz-utils rpm \
             libxkbcommon-dev libwayland-dev libgl1-mesa-dev libegl1 libfuse2
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@stable
-      - name: Compilar y probar
+      - name: Build and test
         run: |
           cargo build --release --locked
           cargo test --release --locked
       - name: Tarball
         run: LENTE_SKIP_BUILD=1 sh packaging/tarball/build-tarball.sh
-      - name: Paquete .deb
+      - name: .deb package
         run: LENTE_SKIP_BUILD=1 sh packaging/deb/build-deb.sh
-      - name: Paquete .rpm
+      - name: .rpm package
         run: LENTE_SKIP_BUILD=1 sh packaging/rpm/build-rpm.sh
       - name: AppImage
         run: LENTE_SKIP_BUILD=1 sh packaging/appimage/build-appimage.sh
       - uses: actions/upload-artifact@v4
         with:
-          name: paquetes
+          name: packages
           path: dist/*
 
   flatpak:
     runs-on: ubuntu-24.04
     container:
-      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-24.08
+      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-25.08
       options: --privileged
     steps:
-      - uses: actions/checkout@v4
-      - name: Fuentes de Cargo para compilar sin red
+      - uses: actions/checkout@v5
+      - name: Cargo sources for the offline build
         run: |
           pip3 install --break-system-packages aiohttp toml tomlkit || pip3 install aiohttp toml tomlkit
           curl -fsSL -o /tmp/flatpak-cargo-generator.py https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/master/cargo/flatpak-cargo-generator.py
           python3 /tmp/flatpak-cargo-generator.py Cargo.lock -o packaging/flatpak/cargo-sources.json
-      - name: Nombre del paquete
+      - name: Package name
         id: v
         run: |
           V=$(grep -m1 '^version' Cargo.toml | cut -d '"' -f 2)
@@ -66,15 +66,15 @@ jobs:
           manifest-path: packaging/flatpak/app.lente.Lente.yml
           cache-key: flatpak-builder-${{ github.sha }}
 
-  publicar:
-    needs: [paquetes, flatpak]
+  publish:
+    needs: [packages, flatpak]
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/download-artifact@v4
         with:
           path: descargas
-      - name: Reunir archivos y sumas de comprobación
+      - name: Collect files and checksums
         run: |
           mkdir dist
           find descargas -type f \( -name '*.tar.gz' -o -name '*.deb' -o -name '*.rpm' -o -name '*.AppImage' -o -name '*.flatpak' \) -exec cp {} dist/ \;

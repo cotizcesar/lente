@@ -2,7 +2,7 @@
 name = "lente"
 version = "0.4.0"
 edition = "2021"
-description = "Control de cámaras web UVC (Elgato Facecam y otras) para Linux"
+description = "Webcam control for UVC cameras (Elgato Facecam and others) on Linux"
 license = "GPL-3.0-or-later"
 readme = "README.md"
 keywords = ["webcam", "uvc", "v4l2", "facecam", "linux"]

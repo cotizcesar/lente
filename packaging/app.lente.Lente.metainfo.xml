@@ -4,34 +4,36 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <name>Lente</name>
-  <summary>Ajustes de cámaras web Elgato Facecam y UVC en Linux</summary>
-  <summary xml:lang="en">Settings for Elgato Facecam and UVC webcams on Linux</summary>
+  <summary>Settings for Elgato Facecam and UVC webcams on Linux</summary>
+  <summary xml:lang="es">Ajustes de cámaras web Elgato Facecam y UVC en Linux</summary>
   <description>
     <p>
-      Lente controla la cámara web en Linux: vista previa con resolución y fotogramas por segundo,
-      encuadre, exposición, enfoque, balance de blancos, imagen, HDR y reducción de ruido.
-      Con las cámaras Elgato Facecam también ofrece los ajustes propios de la cámara (tono,
-      intensidad, bloqueos, modo poca luz, luz de estado, guardar en la cámara) y aplica el perfil
-      que la cámara guardó desde Windows.
+      Lente controls your webcam on Linux: live preview with resolution and frame rate, framing,
+      exposure, focus, white balance, picture, HDR and noise reduction. With Elgato Facecam
+      cameras it also offers the camera's own settings (tint, vibrancy, locks, low-light mode,
+      status light, saving to the camera) and applies the profile the camera stored from Windows.
     </p>
-    <p>Proyecto independiente, sin relación con Elgato ni Corsair.</p>
+    <p>Independent project, not affiliated with Elgato or Corsair.</p>
   </description>
+  <url type="homepage">https://github.com/cotizcesar/lente</url>
+  <url type="bugtracker">https://github.com/cotizcesar/lente/issues</url>
+  <developer id="io.github.cotizcesar">
+    <name>cotizcesar</name>
+  </developer>
   <launchable type="desktop-id">app.lente.Lente.desktop</launchable>
   <content_rating type="oars-1.1"/>
   <releases>
     <release version="0.4.0" date="2026-11-06">
-      <description><p>Guardar dentro de la cámara con comprobación; paquetes tarball, .deb, .rpm, AppImage, Flatpak e instalador por terminal.</p></description>
+      <description><p>Saving inside the camera with a check; the original's write spacing, frame transitions, focus presets and status light; tarball, .deb, .rpm, AppImage and Flatpak packages and a terminal installer.</p></description>
     </release>
     <release version="0.3.0" date="2026-11-06">
-      <description><p>14 idiomas, arranque en milisegundos, pantalla completa, cuadrícula, preajustes de enfoque y transiciones suaves.</p></description>
+      <description><p>14 languages, millisecond start-up, full screen, grid, focus presets and smooth transitions.</p></description>
     </release>
     <release version="0.2.1" date="2026-11-06">
-      <description><p>Restablecer de fábrica como el original; fps informados por la cámara.</p></description>
+      <description><p>Factory reset like the original; fps reported by the camera.</p></description>
     </release>
     <release version="0.2.0" date="2026-11-06">
-      <description>
-        <p>Fotogramas por segundo, captura en dos hilos, perfil de Windows, acceso USB directo, paquetes Flatpak y AppImage.</p>
-      </description>
+      <description><p>Frame rates, two-thread capture, Windows profile, direct USB access, Flatpak and AppImage packages.</p></description>
     </release>
     <release version="0.1.0" date="2026-11-06"/>
   </releases>
