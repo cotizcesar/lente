@@ -32,11 +32,27 @@ fi
 
 git add -A
 git commit -q -m "Lente $VERSION" || true
-git tag -a "v$VERSION" -m "Lente $VERSION" 2>/dev/null || true
+TAG="v$VERSION"
+# Point the version tag at the newest commit. Moving a tag GitHub already published a release
+# for would change a released version, so that case asks for a new version number instead.
+if [ "$(git rev-parse "$TAG^{commit}" 2>/dev/null)" != "$(git rev-parse HEAD)" ]; then
+    if curl -fsS -o /dev/null "https://api.github.com/repos/$REPO/releases/tags/$TAG" 2>/dev/null; then
+        echo "Release $TAG is already published: bump the version in Cargo.toml for these changes."
+        exit 1
+    fi
+    git tag -f -a "$TAG" -m "Lente $VERSION" >/dev/null
+fi
 git push -u origin main
-git push origin "v$VERSION"
-if command -v gh >/dev/null 2>&1; then
-    gh repo edit "$REPO" --add-topic webcam --add-topic linux --add-topic uvc --add-topic elgato-facecam >/dev/null 2>&1 || true
+# --force only moves the tag of an unpublished version (checked above); the release workflow
+# runs again on the new commit.
+git push --force origin "$TAG"
+if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+    gh repo edit "$REPO" --description "Webcam control (Elgato Facecam and UVC) for Linux" \
+        --add-topic webcam --add-topic linux --add-topic uvc --add-topic elgato-facecam >/dev/null 2>&1 || true
+    echo "Following the release build (Ctrl+C stops watching, not the build)…"
+    sleep 5
+    RUN=$(gh run list --repo "$REPO" --workflow release.yml --limit 1 --json databaseId -q '.[0].databaseId' 2>/dev/null || true)
+    [ -n "$RUN" ] && gh run watch "$RUN" --repo "$REPO" --exit-status || true
 fi
 echo
 echo "Done: https://github.com/$REPO"
